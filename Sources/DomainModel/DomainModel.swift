@@ -69,9 +69,54 @@ public struct Money {
 // Job
 //
 public class Job {
+    
+    var title: String
+    var type: JobType
+    
     public enum JobType {
         case Hourly(Double)
         case Salary(UInt)
+    }
+    
+    init(title: String, type: JobType) {
+        self.title = title
+        self.type = type
+    }
+    
+    func calculateIncome(_ hours: Int) -> Int {
+        switch self.type {
+        case .Hourly(let wages):
+            return Int(Double(hours) * wages)
+        case .Salary(let wages):
+            return Int(wages)
+        }
+    }
+    
+    func raise(byAmount: Int) {
+        switch self.type {
+        case .Hourly(let wages):
+            self.type = Job.JobType.Hourly(wages + Double(byAmount))
+        case .Salary(let wages):
+            self.type = Job.JobType.Salary(wages + UInt(byAmount))
+        }
+    }
+    
+    func raise(byAmount: Double) {
+        switch self.type {
+        case .Hourly(let wages):
+            self.type = Job.JobType.Hourly(wages + byAmount)
+        case .Salary(let wages):
+            self.type = Job.JobType.Salary(wages + UInt(byAmount))
+        }
+    }
+    
+    func raise(byPercent: Double) {
+        switch self.type {
+        case .Hourly(let wages):
+            self.type = Job.JobType.Hourly(wages * (1.0 + byPercent))
+        case .Salary(let wages):
+            self.type = Job.JobType.Salary(wages * UInt(1.0 + byPercent))
+        }
     }
 }
 
@@ -79,6 +124,23 @@ public class Job {
 // Person
 //
 public class Person {
+    var firstName: String
+    var lastName: String
+    var age: Int
+    var job: Job?
+    var spouse: Person?
+    
+    init(firstName: String, lastName: String, age: Int, job: Job? = nil, spouse: Person? = nil) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.age = age
+        self.job = job
+        self.spouse = spouse
+    }
+    
+    func toString() -> String {
+        return "[Person: firstName:\(self.firstName) lastName:\(self.lastName) age:\(self.age) job:\(String(describing: self.job)) spouse:\(String(describing: self.spouse))]"
+    }
 }
 
 ////////////////////////////////////
